@@ -26,11 +26,6 @@ class HolidayTableCreating(object):
         listofzeros = [0] * n
         return listofzeros
 
-    #
-    # def onelistmaker(self, n):
-    #     listofones = [1] * n
-    #     return listofones
-
     def Windows(self):
         subset_data_frame = self.Preprocessing()  # belki baska isim vermem gerekebilir
         lower_window = self.Zerolistmaker(len(subset_data_frame["name"]))
