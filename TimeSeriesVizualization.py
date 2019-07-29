@@ -17,7 +17,6 @@ import statsmodels.api as sm
 from pylab import rcParams
 
 
-# rename with the filename
 
 class TimeSeriesVizualization(object):
     def __init__(self, df, ds, y):
@@ -159,7 +158,6 @@ if __name__ == '__main__':
     x = viz.df
     viz.AutoCorrelation_plot()
 
-# HolidayTableCreator
 
 
 def CreatingHolidayTableforPlotting(excelname, int_countryref, ds, countryrefcolumnname, year):
