@@ -1,5 +1,4 @@
 from Core.CorePaths import FileReader
-import pandas as pd
 
 class TrainTestSplit(object):
 

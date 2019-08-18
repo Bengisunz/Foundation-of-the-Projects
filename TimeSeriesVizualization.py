@@ -1,23 +1,19 @@
-import os
 import warnings
-from datetime import datetime
 import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
-import seaborn as sns
 import random
+import matplotlib
+
+from statsmodels.graphics import tsaplots
+from statsmodels.api import tsa
+from pylab import rcParams
 
 from Core.CorePaths import FileReader
 from Foundation.SpecialDayOrganization import HolidayTableCreating
 
 warnings.filterwarnings("ignore")
 plt.style.use('fivethirtyeight')
-from statsmodels.graphics import tsaplots
-import statsmodels.api as sm
-from pylab import rcParams
 
-
-# rename with the filename
 
 class TimeSeriesVizualization(object):
     def __init__(self, df, ds, y):
@@ -138,28 +134,18 @@ class TimeSeriesVizualization(object):
     def Decomposition(self):
         series, df = self.df_to_series()
         rcParams['figure.figsize'] = 11, 9
-        decomposition = sm.tsa.seasonal_decompose(df['y'])
+        decomposition = tsa.seasonal_decompose(df['y'])
         fig3 = decomposition.plot()
         return fig3
 
     def Trend(self):
         series, df = self.df_to_series()
-        decomposition = sm.tsa.seasonal_decompose(df)
+        decomposition = tsa.seasonal_decompose(df)
         trend = decomposition.trend
         ax6 = trend.plot(figsize=(12, 6), fontsize=6)
         ax6.set_xlabel('Date', fontsize=10)
         ax6.set_title('Seasonal component the Sales', fontsize=10)
         return ax6
-
-
-if __name__ == '__main__':
-    reader = FileReader()
-    magdf = reader.ReadCsv("timesplitdeneme.csv")
-    viz = TimeSeriesVizualization(magdf, 'ds', 'y')
-    x = viz.df
-    viz.AutoCorrelation_plot()
-
-# HolidayTableCreator
 
 
 def CreatingHolidayTableforPlotting(excelname, int_countryref, ds, countryrefcolumnname, year):
@@ -175,3 +161,30 @@ def CreatingHolidayTableforPlotting(excelname, int_countryref, ds, countryrefcol
     hh["rand_col"] = rand_colours
     hh18 = hh[hh["year"] == year]
     return hh18
+
+
+def ComparingTrendLines(data_df, datecolumn, real_value, predicted_value):
+    """
+    :param data_df: The main date which should be dataframe
+    :param datecolumn: May be ds
+    :param predicted_value: The value after forecast
+    :param real_value: The groundtruth
+    :return: Visualization> Comparison of the prediction value and realvalue
+    """
+    plt.plot(datecolumn, predicted_value, data=data_df, marker="", color='red', linewidth=2)
+    plt.plot(datecolumn, real_value, data=data_df, marker='', color='blue', linewidth=2)
+    plt.title("Trendline of forecasted and actual value", loc='left', fontsize=20, fontweight=0, color='black')
+    fig = matplotlib.pyplot.gcf()
+    fig.set_size_inches(18.5, 10.5)
+    plt.xlabel("Time")
+    plt.ylabel("Value")
+    plt.legend()
+    plt.show()
+
+
+if __name__ == '__main__':
+    reader = FileReader()
+    magdf = reader.ReadCsv("timesplitdeneme.csv")
+    viz = TimeSeriesVizualization(magdf, 'ds', 'y')
+    x = viz.df
+    viz.AutoCorrelation_plot()
